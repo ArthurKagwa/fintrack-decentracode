@@ -9,6 +9,7 @@
         <input
           type="number"
           id="amount"
+          formControlName="amount"
           class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
           placeholder="Enter amount"
           required
@@ -23,6 +24,7 @@
         <input
           type="text"
           id="description"
+          formControlName="description"
           class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
           placeholder="Enter description"
           required
@@ -40,6 +42,7 @@
               value="income"
               class="w-4 h-4 text-green-600 border-gray-300 focus:ring-green-500"
               required
+              formControlName="type"
             />
             <span class="ml-2 text-sm text-gray-700">Income</span>
           </label>

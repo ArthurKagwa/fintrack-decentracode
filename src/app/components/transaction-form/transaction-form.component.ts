@@ -1,52 +1,39 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-transaction-form',
   templateUrl: './transaction-form.component.html',
-  styleUrls: ['./transaction-form.component.css']
+  styleUrls: ['./transaction-form.component.css'],
+  imports: [ReactiveFormsModule]
 })
-export class TransactionFormComponent implements OnInit {
-  transactionForm: FormGroup;
-  transactions: any[] = [];
 
-  constructor(private fb: FormBuilder) {
-    this.transactionForm = this.fb.group({
-      // Define form controls and validators
-      amount: ['', [Validators.required, Validators.min(0.01)]],
-      description: ['', Validators.required],
-      date: ['', Validators.required]
-    });
-  }
-
-  ngOnInit(): void {
+export class TransactionFormComponent {
+  transactionForm = new FormGroup({
+    amount: new FormControl(''),
+    type: new FormControl(''),
+    description: new FormControl('')
+  });
+  transactions:any[] = [];
+  onSubmit() {
+    //handle submit
+    // Load stored transactions from local storage if they exist
     const storedTransactions = localStorage.getItem('transactions');
     if (storedTransactions) {
       this.transactions = JSON.parse(storedTransactions);
     }
-  }
+    const newTransaction = this.transactionForm.value;
+      this.transactions.push(newTransaction);
 
-onSubmit(): void {
-  console.log('Form submitted');
-  if (this.transactionForm.valid) {
-    console.log('Form is valid');
-    const newTransaction = this.transactionForm.value; // Get form data
-
-    // Add new transaction to the local array
-    this.transactions.push(newTransaction);
-
-    // Ensure localStorage is available before saving
-    if (typeof window !== 'undefined' && window.localStorage) {
+      // Save the updated transactions array to local storage
       localStorage.setItem('transactions', JSON.stringify(this.transactions));
-    }
-  } else {
-    console.log('Form is invalid', this.transactionForm.errors);
-    Object.keys(this.transactionForm.controls).forEach(key => {
-      const controlErrors = this.transactionForm.get(key)?.errors;
-      if (controlErrors) {
-        console.log(`Key: ${key}, Errors: `, controlErrors);
-      }
-    });
+
+      // Reset the form for the next transaction
+      this.transactionForm.reset();
+      console.log('Transaction added successfully:', newTransaction);
+
+      console.log('All transactions:', this.transactions);
+
   }
 }
-}
+
